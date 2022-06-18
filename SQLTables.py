@@ -12,12 +12,9 @@ conn = pymysql.connect(host = "localhost",
 cursor = conn.cursor()
 cursor.execute("SELECT VERSION()")
 
-cursor.execute("create table users ( \
-    email varchar(70) primary key not null,\
-    password varchar(100) not null\
-    );")
-
-
+cursor.execute("CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, "
+               "email VARCHAR(255), "
+               "password VARCHAR(255))")
 
 cursor.close()
 conn.close()
