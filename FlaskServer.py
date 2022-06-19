@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request, make_response, url_for, session
+from flask import Flask, jsonify, abort, request, make_response, url_for, session, flash
 from flask import render_template, redirect, g
 from flask_session import Session
 import pymysql
@@ -15,7 +15,6 @@ sess = Session()
 DB_USERNAME = 'root'
 DB_PASSWORD = 'password'
 DB_NAME = 'paperTrade'
-app.secret_key = 'superSecretKey'
 
 class User:
     def __init__(self, id, email, password):
@@ -36,9 +35,23 @@ def login():
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
-    if 'loggedin' in session.keys() and session['loggedin']:
+    # if 'loggedin' in session.keys() and session['loggedin']:
+    #     session.pop('id', None)
+    #     email = request.form['email']
+    #     user = User(0,email,"hafd")
+    #     email2 = ""
+    #     for i in range(0, len(user.email)):
+    #         if (user.email[i] == '@'):
+    #             email2 = user.email[:i]
+    #
+    #     user.email = email2
+    #     g.user = user
+    #     return render_template('home.html')
+    if request.method == 'POST':
+        session.pop('id', None)
         email = request.form['email']
-        user = User(0,email,"hafd")
+        password = request.form['password']
+        user = User(0, email, password)
         email2 = ""
         for i in range(0, len(user.email)):
             if (user.email[i] == '@'):
@@ -46,12 +59,6 @@ def home():
 
         user.email = email2
         g.user = user
-        return render_template('home.html')
-    if request.method == 'POST':
-
-        email = request.form['email']
-        password = request.form['password']
-        g.user.email = email
 
         conn = pymysql.connect(host="localhost",
                                user=DB_USERNAME,
@@ -105,9 +112,16 @@ def register():
         return render_template('register.html')
 
 
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    if request.method == 'POST':
+
+        session.pop('logged_in', None)
+        flash('You were logged out.')
+        return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.secret_key = 'super secret key'
+    app.secret_key = 'superSecretKey'
     app.config['SESSION_TYPE'] = 'filesystem'
 
     sess.init_app(app)
