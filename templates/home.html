@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Paper Route</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+</head>
+
+<script>
+    function renderTime(){
+    var myDate = new Date();
+    var year = myDate.getFullYear();
+    if(year < 1000){
+        year += 1900
+    }
+    var day = myDate.getDay();
+    var month =  myDate.getMonth();
+    var daym = myDate.getDate();
+    var dayarray = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+    var montharray = new Array("Jan","Feb","March","April","May","June","July","Aug","Sept","Oct","Nov","Dec")
+    ;
+    var currentTime = new Date()
+    var h = currentTime.getHours() + 1;
+    var chinaH = currentTime.getHours() + 13;
+    var japanH = currentTime.getHours() + 14;
+    var russianH = currentTime.getHours() + 8;
+    var m = currentTime.getMinutes();
+    var s = currentTime.getSeconds();
+        if(russianH >= 24){
+            russianH = russianH%24;
+        }
+        else if( russianH > 12){
+            russianH = russianH - 0;
+        }
+        if(russianH < 10){
+            russianH = "0" + russianH;
+        }
+        if(japanH >= 24){
+            japanH = japanH%24;
+        }
+        else if( japanH > 12){
+            japanH = japanH - 0;
+        }
+        if(japanH < 10){
+            japanH = "0" + japanH;
+        }
+        if(chinaH >= 24){
+            chinaH = chinaH%24;
+        }
+        else if( chinaH > 12){
+            chinaH = chinaH - 0;
+        }
+        if(chinaH < 10){
+            chinaH = "0" + chinaH;
+        }
+        if(h == 24 ){
+            h = 0;
+
+        }else if(h > 12 ){
+            h = h - 0;
+
+        }
+        if(h < 10){
+            h = "0" + h;
+        }
+        if(m < 10){
+            m = "0" + m;
+        }
+        if(s < 10){
+            s = "0" + s;
+        }
+
+        var myClock = document.getElementById("clockDisplay")
+        var myClock2 = document.getElementById("clockDisplay2")
+        var myClock3 = document.getElementById("clockDisplay3")
+        var myClock4 = document.getElementById("clockDisplay4")
+        myClock.textContent = "New York, USA " + daym + " " + montharray[month] + " " + year + " | " + h+ ":" +m+":" + s;
+        myClock.innerText  = "New York, USA " + daym + " " + montharray[month] + " " + year + " | " + h+ ":" +m+":" + s;
+        myClock2.textContent = "Tokyo, Japan " + daym + " " + montharray[month] + " " + year + " | " + japanH+ ":" +m+":" + s;
+        myClock2.innerText  = "Tokyo, Japan " + daym + " " + montharray[month] + " " + year + " | " + japanH+ ":" +m+":" + s;
+        myClock3.textContent = "Beijing, China" + daym + " " + montharray[month] + " " + year + " | " + chinaH+ ":" +m+":" + s;
+        myClock3.innerText  = "Beijing, China " + daym + " " + montharray[month] + " " + year + " | " + chinaH+ ":" +m+":" + s;
+        myClock4.textContent = "Moscow, Russia" + daym + " " + montharray[month] + " " + year + " | " + russianH+ ":" +m+":" + s;
+        myClock4.innerText  = "Moscow, Russia " + daym + " " + montharray[month] + " " + year + " | " + russianH+ ":" +m+":" + s;
+        setTimeout("renderTime()", 1000);
+
+}
+renderTime();
+</script>
+<style>
+    .container{
+        font-family: arial;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        width: 340px;
+        padding: 10px;
+}
+</style>
+
+<body onload="renderTime();">
+
+
+
+
+<center><h1>Welcome {{g.user.email}} </h1></center>
+<div id="clockDisplay" class="container"></div>
+<div id="clockDisplay2" class="container"></div>
+<div id="clockDisplay3" class="container"></div>
+<div id="clockDisplay4" class="container"></div>
+
+</body>
+</html>
