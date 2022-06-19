@@ -90,30 +90,134 @@
 renderTime();
 </script>
 <style>
-    .container{
+
+    .box {
+        -webkit-columns: auto 3; /* Chrome, Safari, Opera */
+        -moz-columns: auto 3; /* Firefox */
+        columns: auto 3;
+
+    }
+
+
+    .container {
         font-family: arial;
         font-weight: bold;
         color: black;
         border: 1px solid black;
         width: 340px;
         padding: 10px;
+        background-color: gray ;
+
+    }
+    .container1 {
+        font-family: arial;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        width: 340px;
+        padding: 10px;
+        background-color: red ;
+
+    }
+    .container3 {
+        font-family: arial;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        width: 340px;
+        padding: 10px;
+        background-color: white ;
+
+    }
+    .container2 {
+        font-family: arial;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        width: 340px;
+        padding: 10px;
+        border-radius: 30px;
+    }
+    .container4 {
+        font-family: arial;
+        font-weight: bold;
+        color: black;
+        border: 1px solid black;
+        width: 340px;
+        padding: 10px;
+        background-color: aqua;
+    }
+    .right{
+        float: right;
+    }
+
+    .hoverColor:hover{
+     background: #DC143C;
+    }
+    .bs-example{
+    	margin: 20px;
+    }
+    #shadowBox {
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.2);
+    /* Black w/opacity/see-through */
+    border: 3px solid;
+}
+
+.rainbow {
+    text-align: center;
+    text-decoration: underline;
+    font-size: 32px;
+    letter-spacing: 5px;
+}
+.rainbow_text_animated {
+    background: linear-gradient(to right, #6666ff, #0099ff , #00ff00, #ff3399, #6666ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rainbow_animation 6s ease-in-out infinite;
+    background-size: 400% 100%;
+}
+
+@keyframes rainbow_animation {
+    0%,100% {
+        background-position: 0 0;
+    }
+
+    50% {
+        background-position: 100% 0;
+    }
 }
 </style>
 
 <body onload="renderTime();">
 
 
+<br>
+<div class="row d-flex justify-content-center align-items-center h-100">
+    <div class="box d-flex justify-content-between">
+        <div>🇺🇸</div>
+        <div id="clockDisplay" class="container3" ></div>
 
+        <div>&nbsp;🇯🇵</div>
+        <div id="clockDisplay2" class="container"></div>
+        <div>🇨🇳</div>
+        <div id="clockDisplay3" class="container1"></div>
+        <div>&nbsp;🇷🇺</div>
+        <div id="clockDisplay4" class="container4"></div>
+        <form method="post" action="logout">
 
-<center><h1>Welcome {{g.user.email}} </h1></center>
-<div id="clockDisplay" class="container"></div>
-<div id="clockDisplay2" class="container"></div>
-<div id="clockDisplay3" class="container"></div>
-<div id="clockDisplay4" class="container"></div>
-<form method="post" action="logout">
-
-    <button class="btn btn-lg px-5" type="submit"><em>Logout</em></button>
+    <button class="right hoverColor container2 btn btn-lg px-5" type="submit"><em>&larr; Logout</em></button>
 
 </form>
+    </div>
+
+
+<div class="rainbow rainbow_text_animated" id="shadowBox"  style="text-align: center;"><h1>Welcome {{g.user.email}} </h1></div>
+
+
+</div>
+
 </body>
 </html>
