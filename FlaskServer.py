@@ -2,6 +2,8 @@ from flask import Flask, jsonify, abort, request, make_response, url_for, sessio
 from flask import render_template, redirect, g
 from flask_session import Session
 import pymysql
+from src.paperTrade.DTO.profileDTO import Profile
+from src.paperTrade.DTO.userDTO import User
 import os
 import time
 import datetime
@@ -16,17 +18,12 @@ DB_USERNAME = 'root'
 DB_PASSWORD = 'password'
 DB_NAME = 'paperTrade'
 
-class User:
-    def __init__(self, id, email, password):
-        self.id = id
-        self.email = email
-        self.password = password
-
-    def __repr__(self):
-        return f'<User: {self.email}>'
-
+p = Profile
 users = []
-
+def setProfile( Profile):
+    p.money = Profile.money
+    p.id = Profile.id
+    p.totalShares = Profile.totalShares
 
 @app.route('/')
 def login():
@@ -49,6 +46,8 @@ def home():
     #     return render_template('home.html')
     if request.method == 'POST':
         session.pop('id', None)
+
+        g.profile = p
         email = request.form['email']
         password = request.form['password']
         user = User(0, email, password)
@@ -72,6 +71,7 @@ def home():
         # Fetch one record and return result
         account = cursor.fetchone()
 
+
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
@@ -85,7 +85,7 @@ def home():
     else:
         return render_template('login.html', msg='')
 
-
+#add already registered users denial
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -98,11 +98,25 @@ def register():
                                db=DB_NAME,
                                port=3306)
         cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
         # Create a new record
         sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
 
+
         # Execute the query
         cursor.execute(sql, (email, password))
+
+        # the connection is not autocommited by default. So we must commit to save our changes.
+        conn.commit()
+        cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
+        account = cursor.fetchone()
+        id = account['id']
+        money = 10000
+        totalShares = 0
+        profile = Profile(id,money,totalShares)
+        setProfile(profile)
+        sql2 = "INSERT INTO `profile` (id,money, totalShares) VALUES (%s,%s, %s)"
+        cursor.execute(sql2, (id, money, totalShares))
 
         # the connection is not autocommited by default. So we must commit to save our changes.
         conn.commit()
