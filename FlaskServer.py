@@ -29,6 +29,37 @@ def setProfile( Profile):
 def login():
     return render_template('login.html')
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    return render_template('profile.html')
+
+@app.route('/home')
+def homePage():
+    print(p.id)
+    id = p.id
+    conn = pymysql.connect(host="localhost",
+                           user=DB_USERNAME,
+                           passwd=DB_PASSWORD,
+                           db=DB_NAME,
+                           port=3306)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    cursor.execute('SELECT * FROM profile WHERE id = %s ', id)
+
+    account = cursor.fetchone()
+    cursor.execute('SELECT * FROM users WHERE id = %s ', id)
+
+    account1 = cursor.fetchone()
+    profile = Profile(account['id'], account['money'], account['totalShares'])
+    g.profile = profile
+    email2 = ""
+    for i in range(0, len(account1['email'])):
+        if (account1['email'][i] == '@'):
+            email2 = account1['email'][:i]
+    user = User(account['id'], email2, "hd")
+    g.user = user
+    return render_template('home.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
@@ -69,9 +100,15 @@ def home():
         cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
 
         # Fetch one record and return result
+
+        # Fetch one record and return result
         account = cursor.fetchone()
+        cursor.execute('SELECT * FROM profile WHERE id = %s ', (account['id']))
 
-
+        account1 = cursor.fetchone()
+        prof = Profile(account1['id'], account1['money'], account1['totalShares'])
+        g.profile = prof
+        setProfile(prof)
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
@@ -85,10 +122,11 @@ def home():
     else:
         return render_template('login.html', msg='')
 
-#add already registered users denial
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
+
         email = request.form['email']
         password = request.form['password']
 
@@ -99,8 +137,15 @@ def register():
                                port=3306)
         cursor = conn.cursor(pymysql.cursors.DictCursor)
         cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
+        cursor.execute('SELECT * FROM users WHERE email = %s ', email)
+        account1 = cursor.fetchone()
+        if account1:
+
+            return render_template('login.html')
         # Create a new record
+
         sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
+
 
 
         # Execute the query
