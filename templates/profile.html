@@ -26,6 +26,52 @@ function closeNav() {
 }
 </script>
 <style>
+    body {
+    background: rgb(169,169,169);
+
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: gray;
+}
+
+.profile-button {
+    background: rgb(169,169,169);
+
+    box-shadow: none;
+    border: none
+}
+
+.profile-button:hover {
+    background: mediumpurple;
+}
+
+.profile-button:focus {
+    background: gray;
+    box-shadow: none
+}
+
+.profile-button:active {
+    background: royalblue;
+    box-shadow: none
+}
+
+hhover {
+    background: royalblue;
+    cursor: pointer
+}
+
+.labels {
+    font-size: 11px
+}
+
+.add-experience:hover {
+    background: gray;
+    color: #fff;
+    cursor: pointer;
+    border: solid 1px gray;
+}
     .hoverColor:hover{
         background: #DC143C;
     }
@@ -89,10 +135,9 @@ pos {
   right: 0;
 }
 </style>
-<form method="post" action="logout">
-            <button class="right hoverColor container2 btn btn-lg px-5" type="submit"><em>&larr; Logout</em></button>
-        </form>
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
+
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -103,8 +148,33 @@ pos {
       <a class="nav-item nav-link" href="#">Stocks</a>
     </div>
   </div>
+        <form method="post" action="logout">
+            <button class="right hoverColor container2 btn btn-lg px-5" type="submit"><em>&larr; Logout</em></button>
+        </form>
 </nav>
+<div class="container rounded bg-white mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-3 border-right">
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://www.rogowaylaw.com/wp-content/uploads/Blank-Employee.jpg"><span class="font-weight-bold"></span><span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>
+        </div>
+        <div class="col-md-5 border-right">
+            <div class="p-3 py-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-right"><em>Profile/Profile Settings</em></h4>
+                </div>
+                <div class="row mt-3">
+                    <div> Total Money: $</div>
+                    <div> Total Shares:</div>
+                    <div class="col-md-12"><label class="labels">Password</label><input type="text" class="form-control" placeholder="enter new password" value=""></div>
 
+                </div>
+                <div class="mt-5 text-center"><button class="hhover btn btn-primary profile-button" type="button">Save Profile</button></div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</div>
 
 </body>
 </html>
