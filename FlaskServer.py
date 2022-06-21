@@ -1,6 +1,9 @@
+from urllib import response
+
 from flask import Flask, jsonify, abort, request, make_response, url_for, session, flash
 from flask import render_template, redirect, g
 from flask_session import Session
+
 import pymysql
 from src.paperTrade.DTO.profileDTO import Profile
 from src.paperTrade.DTO.userDTO import User
@@ -106,6 +109,7 @@ def homePage():
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
+    print(session.keys())
     email = request.form['email']
     password = request.form['password']
     conn = pymysql.connect(host="localhost",
@@ -130,8 +134,7 @@ def home():
     #     user.email = email2
     #     g.user = user
     #     return render_template('home.html')
-    if request.method == 'POST' and acc:
-        session.pop('id', None)
+    if request.method == 'POST' and acc :
 
         g.profile = p
         email = request.form['email']
@@ -225,14 +228,13 @@ def register():
     else:
         return render_template('register.html')
 
-
 @app.route('/logout', methods=['GET', 'POST'])
 def logout():
     if request.method == 'POST':
 
-        session.pop('logged_in', None)
         flash('You were logged out.')
-        return redirect(url_for('login'))
+
+        return render_template('login.html')
 
 if __name__ == '__main__':
     app.secret_key = 'superSecretKey'
