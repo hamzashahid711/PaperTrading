@@ -29,13 +29,56 @@ def setProfile( Profile):
 def login():
     return render_template('login.html')
 
+@app.route('/newPassword', methods=['GET', 'POST'])
+def newPass():
+    newPass=request.form['newpassword']
+    conn = pymysql.connect(host="localhost",
+                           user=DB_USERNAME,
+                           passwd=DB_PASSWORD,
+                           db=DB_NAME,
+                           port=3306)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+    sql = "UPDATE `users` set password =  (`password`) where id = (`id`) VALUES (%s, %s)"
+    try:
+        # Execute the SQL command
+        cursor.execute(sql,(newPass,p.id))
+
+        # Commit your changes in the database
+        conn.commit()
+    except:
+        # Rollback in case there is any error
+        print("HERE")
+        conn.rollback()
+    # Executing the query
+    conn.close()
+    return render_template('login.html')
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
+    id = p.id
+    conn = pymysql.connect(host="localhost",
+                           user=DB_USERNAME,
+                           passwd=DB_PASSWORD,
+                           db=DB_NAME,
+                           port=3306)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    cursor.execute('SELECT * FROM profile WHERE id = %s ', id)
+
+    account = cursor.fetchone()
+    profile = Profile(account['id'], account['money'], account['totalShares'])
+    g.profile = profile
+    cursor.execute('SELECT * FROM users WHERE id = %s ', id)
+
+    account1 = cursor.fetchone()
+    user = User(account1['id'], account1['email'], account1['password'])
+    g.user = user
+
     return render_template('profile.html')
 
 @app.route('/home')
 def homePage():
-    print(p.id)
+
     id = p.id
     conn = pymysql.connect(host="localhost",
                            user=DB_USERNAME,
@@ -63,6 +106,18 @@ def homePage():
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
+    email = request.form['email']
+    password = request.form['password']
+    conn = pymysql.connect(host="localhost",
+                           user=DB_USERNAME,
+                           passwd=DB_PASSWORD,
+                           db=DB_NAME,
+                           port=3306)
+    cursor = conn.cursor(pymysql.cursors.DictCursor)
+
+    cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
+    acc = cursor.fetchone()
+
     # if 'loggedin' in session.keys() and session['loggedin']:
     #     session.pop('id', None)
     #     email = request.form['email']
@@ -75,7 +130,7 @@ def home():
     #     user.email = email2
     #     g.user = user
     #     return render_template('home.html')
-    if request.method == 'POST':
+    if request.method == 'POST' and acc:
         session.pop('id', None)
 
         g.profile = p
