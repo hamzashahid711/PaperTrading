@@ -106,6 +106,10 @@ def homePage():
     g.user = user
     return render_template('home.html')
 
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
