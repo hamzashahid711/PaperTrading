@@ -113,7 +113,6 @@ def after_request(response):
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
-    print(session.keys())
     email = request.form['email']
     password = request.form['password']
     conn = pymysql.connect(host="localhost",
