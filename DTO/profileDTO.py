@@ -1,6 +1,6 @@
 class Profile:
-    def __init__(self, id, money, totalShares):
+    def __init__(self, id, money, totalcoins):
         self.id = id
         self.money = money
-        self.totalShares = totalShares
+        self.totalcoins = totalcoins
 

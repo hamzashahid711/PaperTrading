@@ -26,7 +26,7 @@ users = []
 def setProfile( Profile):
     p.money = Profile.money
     p.id = Profile.id
-    p.totalShares = Profile.totalShares
+    p.totalcoins = Profile.totalcoins
 
 @app.route('/')
 def login():
@@ -68,7 +68,7 @@ def profile():
     cursor.execute('SELECT * FROM profile WHERE id = %s ', id)
 
     account = cursor.fetchone()
-    profile = Profile(account['id'], account['money'], account['totalShares'])
+    profile = Profile(account['id'], account['money'], account['totalcoins'])
     g.profile = profile
     cursor.execute('SELECT * FROM users WHERE id = %s ', id)
 
@@ -95,7 +95,7 @@ def homePage():
     cursor.execute('SELECT * FROM users WHERE id = %s ', id)
 
     account1 = cursor.fetchone()
-    profile = Profile(account['id'], account['money'], account['totalShares'])
+    profile = Profile(account['id'], account['money'], account['totalcoins'])
     g.profile = profile
     email2 = ""
     for i in range(0, len(account1['email'])):
@@ -166,7 +166,7 @@ def home():
         cursor.execute('SELECT * FROM profile WHERE id = %s ', (account['id']))
 
         account1 = cursor.fetchone()
-        prof = Profile(account1['id'], account1['money'], account1['totalShares'])
+        prof = Profile(account1['id'], account1['money'], account1['totalcoins'])
         g.profile = prof
         setProfile(prof)
         if account:
@@ -217,11 +217,11 @@ def register():
         account = cursor.fetchone()
         id = account['id']
         money = 10000
-        totalShares = 0
-        profile = Profile(id,money,totalShares)
+        totalcoins = 0
+        profile = Profile(id,money,totalcoins)
         setProfile(profile)
-        sql2 = "INSERT INTO `profile` (id,money, totalShares) VALUES (%s,%s, %s)"
-        cursor.execute(sql2, (id, money, totalShares))
+        sql2 = "INSERT INTO `profile` (id,money, totalcoins) VALUES (%s,%s, %s)"
+        cursor.execute(sql2, (id, money, totalcoins))
 
         # the connection is not autocommited by default. So we must commit to save our changes.
         conn.commit()
