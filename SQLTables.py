@@ -18,6 +18,10 @@ cursor.execute("CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, "
 cursor.execute("CREATE TABLE profile (id INT PRIMARY KEY, "
                "money INT, "
                "totalShares INT)")
+cursor.execute("CREATE TABLE stocks (id INT PRIMARY KEY, "
+               "cost FLOAT, "
+               "type VARCHAR(255),"
+               "totalCoinsBought FLOAT)")
 
 cursor.close()
 conn.close()

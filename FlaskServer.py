@@ -50,7 +50,6 @@ def newPass():
         conn.commit()
     except:
         # Rollback in case there is any error
-        print("HERE")
         conn.rollback()
     # Executing the query
     conn.close()
