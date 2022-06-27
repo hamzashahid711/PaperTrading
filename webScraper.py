@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 
-def priceTrack():
+def priceTrackBitcoin():
 
     while True:
         url = "https://coinmarketcap.com/currencies/bitcoin/"
@@ -9,9 +9,120 @@ def priceTrack():
 
         soup = BeautifulSoup(response.text, 'html.parser')
         price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
-        print((price))
-        exit(0)
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        # if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span', {'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
 
+def priceTrackEthereum():
 
-priceTrack()
+    while True:
+        url = "https://coinmarketcap.com/currencies/ethereum/"
+        response = requests.get(url)
 
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        # if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span', {'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackDodgecoin():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/dogecoin/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        # if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span', {'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackTether():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/tether/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        # if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span', {'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackCatGirl():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/catgirl/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        #if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span',{'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackCelsius():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/celsius/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        #if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span',{'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackBitbook():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/bitbook/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        #if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span',{'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackSandbox():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        #if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span',{'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
+
+def priceTrackM7v2():
+
+    while True:
+        url = "https://coinmarketcap.com/currencies/m7v2/"
+        response = requests.get(url)
+
+        soup = BeautifulSoup(response.text, 'html.parser')
+        price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
+        source = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].find('img')['src']
+        coin = soup.find_all('div', {'class': "sc-16r8icm-0 gpRPnR nameHeader"})[0].text
+        #if not down then list will be empty and it will have to be going up
+        trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span',{'class': "icon-Caret-down"})
+        trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
