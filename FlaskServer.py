@@ -3,7 +3,7 @@ from urllib import response
 from flask import Flask, jsonify, abort, request, make_response, url_for, session, flash
 from flask import render_template, redirect, g
 from flask_session import Session
-
+from src.paperTrade.webScraper import Webscrape
 import pymysql
 from src.paperTrade.DTO.profileDTO import Profile
 from src.paperTrade.DTO.userDTO import User
