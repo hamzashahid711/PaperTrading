@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 class Webscrape:
+    def __init__(self):
+        pass
     def priceTrackBitcoin(self):
 
         while True:
