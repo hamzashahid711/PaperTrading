@@ -55,6 +55,7 @@ def newPass():
     conn.close()
     return render_template('login.html')
 
+
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     id = p.id
@@ -109,6 +110,43 @@ def homePage():
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     return response
+
+@app.route('/purchase', methods=['GET', 'POST'])
+def purchase():
+    if request.method == 'POST':
+        id = p.id
+        purchaseTotal = request.form['purchaseAmt']
+        cryptoCoin = request.form['coin']
+        conn = pymysql.connect(host="localhost",
+                               user=DB_USERNAME,
+                               passwd=DB_PASSWORD,
+                               db=DB_NAME,
+                               port=3306)
+        cursor = conn.cursor(pymysql.cursors.DictCursor)
+        cursor.execute('SELECT * FROM profile WHERE id = %s ', id)
+        account = cursor.fetchone()
+        profile = Profile(account['id'], account['money'], account['totalcoins'])
+        purchaseTotal = int(purchaseTotal)
+        profile.totalcoins = int(profile.totalcoins)
+        newCoins = int(purchaseTotal+profile.totalcoins)
+        money = profile.money-10
+        cursor.execute('UPDATE profile set totalcoins = %s where id = %s', (newCoins, profile.id))
+        conn.commit()
+        cursor.execute('SELECT * FROM users WHERE id = %s ', id)
+        account1 = cursor.fetchone()
+        user = User(account1['id'], account1['email'], account1['password'])
+        profile = Profile(account['id'], account['money'], account['totalcoins'])
+        user = User(id, user.email, user.password)
+        email2 = ""
+        for i in range(0, len(user.email)):
+            if (user.email[i] == '@'):
+                email2 = user.email[:i]
+
+        user.email = email2
+        g.user = user
+        g.profile = profile
+        return render_template('home.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():

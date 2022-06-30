@@ -31,12 +31,16 @@ src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.mi
 </head>
 
 <script>
-
     $(document).ready(function() {
     $('.field input').keyup(function() {
-        var hasValue = $('#purchase').filter((index, input) => input.value.length > 0).length;
+        var hasValue = document.getElementById('purchaseAmt').value.length;
+        console.log(hasValue)
+        if (hasValue > 0){
+            x = document.getElementById('btn')
+            console.log(x)
+            $(x).attr('disabled', hasValue ? false : 'disabled');
+        }
 
-        $('.actions input').attr('disabled', hasValue ? false : 'disabled');
     });
 });
 $(document).ready(function(){
@@ -1074,10 +1078,10 @@ body {
       </div>
       <div class="modal-body">
 
-          <form>
+          <form method="post" action="purchase">
                     <p>Select a coin and purchase amount</p>
           <br>
-           <select id="coin">
+           <select id="coin" name="coin">
     <option value="january" >January</option>
     <option value="february">February</option>
     <option value="march">March</option>
@@ -1094,15 +1098,18 @@ body {
           <br>
           <br>
               <div class='field'>
-                <label for="purchase">Input Amount:</label>
-                  <input id="purchase" type="text"     oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+                <label class="form-label" for="purchaseAmt">Input Amount:</label>
+
+                  <input id="purchaseAmt" name="purchaseAmt" type="text" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" />
+              </div>
+              <br>
+              <div class='actions'>
+                  <button id="btn" type="submit" disabled="disabled">Submit Purchase</button>
               </div>
           </form>
           <br>
 
-            <div class='actions'>
-             <input type="submit" value="Submit Purchase" disabled="disabled" />
-            </div>
+
       </div>
 
 
