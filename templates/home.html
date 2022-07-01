@@ -33,16 +33,20 @@ src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.mi
 <script>
     $(document).ready(function() {
     $('.field input').keyup(function() {
+
         var hasValue = document.getElementById('purchaseAmt').value.length;
-        console.log(hasValue)
         if (hasValue > 0){
             x = document.getElementById('btn')
             console.log(x)
             $(x).attr('disabled', hasValue ? false : 'disabled');
         }
+        if (hasValue === 0){
+            x = document.getElementById('btn')
+            $(x).prop("disabled", true)
+        }
 
     });
-});
+    });
 $(document).ready(function(){
   $("#myBtn").click(function(){
     $("#myModal").modal();
