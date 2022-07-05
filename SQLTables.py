@@ -17,8 +17,8 @@ cursor.execute("CREATE TABLE users (id INT AUTO_INCREMENT PRIMARY KEY, "
                "password VARCHAR(255))")
 cursor.execute("CREATE TABLE profile (id INT PRIMARY KEY, "
                "money INT, "
-               "totalcoins INT)")
-cursor.execute("CREATE TABLE crypto (id INT PRIMARY KEY, "
+               "totalcoins FLOAT)")
+cursor.execute("CREATE TABLE crypto (id INT, "
                "cost FLOAT, "
                "type VARCHAR(255))")
 

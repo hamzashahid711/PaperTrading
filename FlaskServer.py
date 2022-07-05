@@ -7,6 +7,7 @@ from src.paperTrade.webScraper import Webscrape
 import pymysql
 from src.paperTrade.DTO.profileDTO import Profile
 from src.paperTrade.DTO.userDTO import User
+from src.paperTrade.DTO.coinDTO import CoinDTO
 import os
 import time
 import datetime
@@ -126,12 +127,18 @@ def purchase():
         cursor.execute('SELECT * FROM profile WHERE id = %s ', id)
         account = cursor.fetchone()
         profile = Profile(account['id'], account['money'], account['totalcoins'])
-        purchaseTotal = int(purchaseTotal)
-        profile.totalcoins = int(profile.totalcoins)
-        newCoins = int(purchaseTotal+profile.totalcoins)
+        purchaseTotal = float(purchaseTotal)
+        profile.totalcoins = float(profile.totalcoins)
+        newCoins = float(purchaseTotal+profile.totalcoins)
         money = profile.money-10
         cursor.execute('UPDATE profile set totalcoins = %s where id = %s', (newCoins, profile.id))
         conn.commit()
+        sql = "INSERT INTO `crypto` (`id`, `cost`, `type`) VALUES (%s, %s, %s)"
+
+        cursor.execute(sql, (id, money, cryptoCoin))
+
+        conn.commit()
+
         cursor.execute('SELECT * FROM users WHERE id = %s ', id)
         account1 = cursor.fetchone()
         user = User(account1['id'], account1['email'], account1['password'])
@@ -207,6 +214,15 @@ def home():
         prof = Profile(account1['id'], account1['money'], account1['totalcoins'])
         g.profile = prof
         setProfile(prof)
+        # w = Webscrape()
+        # price = w.priceBitcoin()
+        # type = w.typeBitcoin()
+        # trendIndicator = w.trendIndicatorBitcoin()
+        # trendNumber = w.trendNumberBitcoin()
+        # image = w.sourceBitcoin()
+        # coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+        # g.coin = coin
+
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
