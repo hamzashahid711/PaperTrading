@@ -44,15 +44,11 @@ def newPass():
     cursor = conn.cursor(pymysql.cursors.DictCursor)
     sql = "UPDATE `users` set password =  (`password`) where id = (`id`) VALUES (%s, %s)"
     try:
-        # Execute the SQL command
         cursor.execute(sql,(newPass,p.id))
 
-        # Commit your changes in the database
         conn.commit()
     except:
-        # Rollback in case there is any error
         conn.rollback()
-    # Executing the query
     conn.close()
     return render_template('login.html')
 
@@ -168,21 +164,7 @@ def home():
 
     cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
     acc = cursor.fetchone()
-
-    # if 'loggedin' in session.keys() and session['loggedin']:
-    #     session.pop('id', None)
-    #     email = request.form['email']
-    #     user = User(0,email,"hafd")
-    #     email2 = ""
-    #     for i in range(0, len(user.email)):
-    #         if (user.email[i] == '@'):
-    #             email2 = user.email[:i]
-    #
-    #     user.email = email2
-    #     g.user = user
-    #     return render_template('home.html')
     if request.method == 'POST' and acc :
-
         g.profile = p
         email = request.form['email']
         password = request.form['password']
@@ -204,9 +186,6 @@ def home():
 
         cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
 
-        # Fetch one record and return result
-
-        # Fetch one record and return result
         account = cursor.fetchone()
         cursor.execute('SELECT * FROM profile WHERE id = %s ', (account['id']))
 
@@ -214,29 +193,43 @@ def home():
         prof = Profile(account1['id'], account1['money'], account1['totalcoins'])
         g.profile = prof
         setProfile(prof)
-        # w = Webscrape()
-        # price = w.priceBitcoin()
-        # type = w.typeBitcoin()
-        # trendIndicator = w.trendIndicatorBitcoin()
-        # trendNumber = w.trendNumberBitcoin()
-        # image = w.sourceBitcoin()
-        # coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-        # g.coin = coin
+        coinList = []
+        Coin = bitcoinMonitor()
+        Coin.type = typeTrim(Coin.type)
+
+        coinList.append(Coin)
 
         if account:
-            # Create session data, we can access this data in other routes
             session['loggedin'] = True
             session['email'] = account['email']
-            # Redirect to home page
-            return render_template('home.html')
+            return render_template("home.html", len=len(coinList), coinList=coinList)
         else:
-            # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
             return render_template('login.html', msg=msg)
     else:
         return render_template('login.html', msg='')
 
 
+def bitcoinMonitor():
+    w = Webscrape()
+    price = w.priceBitcoin()
+    type = w.typeBitcoin()
+    trendIndicator = w.trendIndicatorBitcoin()
+    trendNumber = w.trendNumberBitcoin()
+    image = w.sourceBitcoin()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+
+def typeTrim(type):
+    capitalCount = 0
+    newType = ""
+    for i in type:
+        if i.isupper():
+            capitalCount = capitalCount + 1
+        if capitalCount > 1:
+            break
+        newType = newType + i
+    return newType
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -256,16 +249,13 @@ def register():
         if account1:
 
             return render_template('login.html')
-        # Create a new record
 
         sql = "INSERT INTO `users` (`email`, `password`) VALUES (%s, %s)"
 
 
 
-        # Execute the query
         cursor.execute(sql, (email, password))
 
-        # the connection is not autocommited by default. So we must commit to save our changes.
         conn.commit()
         cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (email, password,))
         account = cursor.fetchone()
@@ -277,7 +267,6 @@ def register():
         sql2 = "INSERT INTO `profile` (id,money, totalcoins) VALUES (%s,%s, %s)"
         cursor.execute(sql2, (id, money, totalcoins))
 
-        # the connection is not autocommited by default. So we must commit to save our changes.
         conn.commit()
         return redirect('/')
 
