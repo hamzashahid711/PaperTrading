@@ -1,4 +1,5 @@
 from urllib import response
+from time import sleep
 
 from flask import Flask, jsonify, abort, request, make_response, url_for, session, flash
 from flask import render_template, redirect, g
@@ -194,10 +195,63 @@ def home():
         g.profile = prof
         setProfile(prof)
         coinList = []
+        print("here1")
         Coin = bitcoinMonitor()
+        time.sleep(2.5)
+        Coin1 = EteriumMonitor()
+        time.sleep(2.5)
+
+
+        Coin2 = DodgecoinMonitor()
+        time.sleep(2.5)
+
+        Coin3 = TetherMonitor()
+        time.sleep(2.5)
+
+        Coin4 = CatGirlMonitor()
+        time.sleep(2.5)
+
+        Coin5 = CelsiusMonitor()
+        time.sleep(2.5)
+
+        Coin6 = BitbookMonitor()
+        time.sleep(2.5)
+
+        Coin7 = SandboxMonitor()
+        time.sleep(2.5)
+
+        Coin8 = M7v2Monitor()
+        time.sleep(2.5)
+
+        print("here2")
+
         Coin.type = typeTrim(Coin.type)
+        Coin1.type = typeTrim(Coin1.type)
+        Coin2.type = typeTrim(Coin2.type)
+        Coin3.type = typeTrim(Coin3.type)
+        Coin4.type = typeTrim(Coin4.type)
+        Coin5.type = typeTrim(Coin5.type)
+        Coin6.type = "BitBook"
+        Coin7.type = "The Sandbox"
+        Coin8.type = "M7v2"
+
+
+
+
+
+        print("here3")
+
 
         coinList.append(Coin)
+        coinList.append(Coin1)
+        coinList.append(Coin2)
+        coinList.append(Coin3)
+        coinList.append(Coin4)
+        coinList.append(Coin5)
+        coinList.append(Coin6)
+        coinList.append(Coin7)
+        coinList.append(Coin8)
+
 
         if account:
             session['loggedin'] = True
@@ -217,6 +271,78 @@ def bitcoinMonitor():
     trendIndicator = w.trendIndicatorBitcoin()
     trendNumber = w.trendNumberBitcoin()
     image = w.sourceBitcoin()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def EteriumMonitor():
+    w = Webscrape()
+    price = w.priceEterium()
+    type = w.typeEterium()
+    trendIndicator = w.trendIndicatorEterium()
+    trendNumber = w.trendNumberEterium()
+    image = w.sourceEterium()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def DodgecoinMonitor():
+    w = Webscrape()
+    price = w.priceDodgecoin()
+    type = w.typeDodgecoin()
+    trendIndicator = w.trendIndicatorDodgecoin()
+    trendNumber = w.trendNumberDodgecoin()
+    image = w.sourceDodgecoin()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def TetherMonitor():
+    w = Webscrape()
+    price = w.priceTether()
+    type = w.typeTether()
+    trendIndicator = w.trendIndicatorTether()
+    trendNumber = w.trendNumberTether()
+    image = w.sourceTether()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def CatGirlMonitor():
+    w = Webscrape()
+    price = w.priceCatGirl()
+    type = w.typeCatGirl()
+    trendIndicator = w.trendIndicatorCatGirl()
+    trendNumber = w.trendNumberCatGirl()
+    image = w.sourceCatGirl()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def CelsiusMonitor():
+    w = Webscrape()
+    price = w.priceCelsius()
+    type = w.typeCelsius()
+    trendIndicator = w.trendIndicatorCelsius()
+    trendNumber = w.trendNumberCelsius()
+    image = w.sourceCelsius()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def BitbookMonitor():
+    w = Webscrape()
+    price = w.priceBitbook()
+    type = w.typeBitbook()
+    trendIndicator = w.trendIndicatorBitbook()
+    trendNumber = w.trendNumberBitbook()
+    image = w.sourceBitbook()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def SandboxMonitor():
+    w = Webscrape()
+    price = w.priceSandbox()
+    type = w.typeSandbox()
+    trendIndicator = w.trendIndicatorSandbox()
+    trendNumber = w.trendNumberSandbox()
+    image = w.sourceSandbox()
+    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return coin
+def M7v2Monitor():
+    w = Webscrape()
+    price = w.priceM7v2()
+    type = w.typeM7v2()
+    trendIndicator = w.trendIndicatorM7v2()
+    trendNumber = w.trendNumberM7v2()
+    image = w.sourceM7v2()
     coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
     return coin
 

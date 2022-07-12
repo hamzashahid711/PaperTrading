@@ -364,14 +364,14 @@ class Webscrape:
 
     def priceSandbox(self):
 
-        url = "https://coinmarketcap.com/currencies/bitbook/"
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
         self.price = soup.find_all('div', {'class': "priceValue"})[0].find('span').text
         return self.price
     def typeSandbox(self):
-        url = "https://coinmarketcap.com/currencies/bitbook/"
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
@@ -379,21 +379,21 @@ class Webscrape:
         return coin
 
     def trendIndicatorSandbox(self):
-        url = "https://coinmarketcap.com/currencies/bitbook/"
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
         trendIndicator = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span', {'class': "icon-Caret-down"})
         return trendIndicator
     def trendNumberSandbox(self):
-        url = "https://coinmarketcap.com/currencies/bitbook/"
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
         trendNumber = soup.find_all('div', {'class': "sc-16r8icm-0 kjciSH priceTitle"})[0].find_all('span')[1].text
         return trendNumber
     def sourceSandbox(self):
-        url = "https://coinmarketcap.com/currencies/bitbook/"
+        url = "https://coinmarketcap.com/currencies/the-sandbox/"
         response = requests.get(url)
 
         soup = BeautifulSoup(response.text, 'html.parser')
