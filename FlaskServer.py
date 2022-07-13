@@ -25,6 +25,15 @@ DB_NAME = 'paperTrade'
 
 p = Profile
 users = []
+global etherium
+global bitcoin
+global cat
+global book
+global mv
+global cel
+global dodge
+global Tether
+global sand
 def setProfile( Profile):
     p.money = Profile.money
     p.id = Profile.id
@@ -79,6 +88,15 @@ def profile():
 
 @app.route('/home')
 def homePage():
+    global etherium
+    global bitcoin
+    global cat
+    global book
+    global mv
+    global cel
+    global dodge
+    global Tether
+    global sand
 
     id = p.id
     conn = pymysql.connect(host="localhost",
@@ -102,6 +120,63 @@ def homePage():
             email2 = account1['email'][:i]
     user = User(account['id'], email2, "hd")
     g.user = user
+    coinList = []
+    Coin = bitcoinMonitor()
+    time.sleep(2.5)
+    Coin1 = EteriumMonitor()
+    time.sleep(2.5)
+
+    Coin2 = DodgecoinMonitor()
+    time.sleep(2.5)
+
+    Coin3 = TetherMonitor()
+    time.sleep(2.5)
+
+    Coin4 = CatGirlMonitor()
+    time.sleep(2.5)
+
+    Coin5 = CelsiusMonitor()
+    time.sleep(2.5)
+
+    Coin6 = BitbookMonitor()
+    time.sleep(2.5)
+
+    Coin7 = SandboxMonitor()
+    time.sleep(2.5)
+
+    Coin8 = M7v2Monitor()
+    time.sleep(2.5)
+
+    Coin.type = typeTrim(Coin.type)
+    Coin1.type = typeTrim(Coin1.type)
+    Coin2.type = typeTrim(Coin2.type)
+    Coin3.type = typeTrim(Coin3.type)
+    Coin4.type = typeTrim(Coin4.type)
+    Coin5.type = typeTrim(Coin5.type)
+    Coin6.type = "BitBook"
+    Coin7.type = "The Sandbox"
+    Coin8.type = "M7v2"
+    sand = Coin7.price
+    book = Coin6.price
+    mv = Coin8.price
+    bitcoin = Coin.price
+    etherium = Coin1.price
+    dodge = Coin2.price
+    Tether = Coin3.price
+    cat = Coin4.price
+    cel = Coin5.price
+
+    coinList.append(Coin)
+    coinList.append(Coin1)
+    coinList.append(Coin2)
+    coinList.append(Coin3)
+    coinList.append(Coin4)
+    coinList.append(Coin5)
+    coinList.append(Coin6)
+    coinList.append(Coin7)
+    coinList.append(Coin8)
+    print("here")
+
     return render_template('home.html')
 
 @app.after_request
@@ -111,8 +186,10 @@ def after_request(response):
 
 @app.route('/purchase', methods=['GET', 'POST'])
 def purchase():
+
     if request.method == 'POST':
         id = p.id
+        money = 0
         purchaseTotal = request.form['purchaseAmt']
         cryptoCoin = request.form['coin']
         conn = pymysql.connect(host="localhost",
@@ -127,33 +204,85 @@ def purchase():
         purchaseTotal = float(purchaseTotal)
         profile.totalcoins = float(profile.totalcoins)
         newCoins = float(purchaseTotal+profile.totalcoins)
-        money = profile.money-10
-        cursor.execute('UPDATE profile set totalcoins = %s where id = %s', (newCoins, profile.id))
-        conn.commit()
-        sql = "INSERT INTO `crypto` (`id`, `cost`, `type`) VALUES (%s, %s, %s)"
+        if cryptoCoin == "Bitcoin":
+            money = bitcoin
+        if cryptoCoin == "Ethereum":
+            money = etherium
+        if cryptoCoin == "Dodgecoin":
+            money = dodge
+        if cryptoCoin == "Tether":
+            money = Tether
+        if cryptoCoin == "CatGirl":
+            money = cat
+        if cryptoCoin == "Celsius":
+            money = cel
+        if cryptoCoin == "Bitbook":
+            money = book
+        if cryptoCoin == "Sandbox":
+            money = sand
+        if cryptoCoin == "M7v2":
+            money = mv
+        z = money.replace("$", "")
+        m = z.replace(",","")
+        moneySpent = float(m)
+        moneySpent = moneySpent * purchaseTotal
 
-        cursor.execute(sql, (id, money, cryptoCoin))
+        if int(profile.money) - float(moneySpent) < 0:
+            cursor.execute('SELECT * FROM users WHERE id = %s ', id)
+            account1 = cursor.fetchone()
+            user = User(account1['id'], account1['email'], account1['password'])
+            profile = Profile(account['id'], account['money'], account['totalcoins'])
+            user = User(id, user.email, user.password)
+            email2 = ""
+            for i in range(0, len(user.email)):
+                if (user.email[i] == '@'):
+                    email2 = user.email[:i]
 
-        conn.commit()
+            user.email = email2
+            g.user = user
+            g.profile = profile
+            return render_template('home.html')
+        else:
+            profile.money = float(profile.money - moneySpent)
+            cursor.execute('UPDATE profile set totalcoins = %s where id = %s', (newCoins, id))
+            conn.commit()
+            sql = "INSERT INTO `crypto` (`id`, `cost`, `type`) VALUES (%s, %s, %s)"
 
-        cursor.execute('SELECT * FROM users WHERE id = %s ', id)
-        account1 = cursor.fetchone()
-        user = User(account1['id'], account1['email'], account1['password'])
-        profile = Profile(account['id'], account['money'], account['totalcoins'])
-        user = User(id, user.email, user.password)
-        email2 = ""
-        for i in range(0, len(user.email)):
-            if (user.email[i] == '@'):
-                email2 = user.email[:i]
+            cursor.execute(sql, (id, moneySpent, cryptoCoin))
 
-        user.email = email2
-        g.user = user
-        g.profile = profile
-        return render_template('home.html')
+            conn.commit()
+            cursor.execute('UPDATE profile set money = %s where id = %s', (profile.money, id))
+            conn.commit()
+
+
+            cursor.execute('SELECT * FROM users WHERE id = %s ', id)
+            account1 = cursor.fetchone()
+            user = User(account1['id'], account1['email'], account1['password'])
+            profile = Profile(account['id'], account['money'], account['totalcoins'])
+            user = User(id, user.email, user.password)
+            email2 = ""
+            for i in range(0, len(user.email)):
+                if (user.email[i] == '@'):
+                    email2 = user.email[:i]
+
+            user.email = email2
+            g.user = user
+            g.profile = profile
+            return home()
+            #return render_template('profile.html')
 
 
 @app.route('/login', methods=['GET', 'POST'])
 def home():
+    global etherium
+    global bitcoin
+    global cat
+    global book
+    global mv
+    global cel
+    global dodge
+    global Tether
+    global sand
     email = request.form['email']
     password = request.form['password']
     conn = pymysql.connect(host="localhost",
@@ -195,7 +324,6 @@ def home():
         g.profile = prof
         setProfile(prof)
         coinList = []
-        print("here1")
         Coin = bitcoinMonitor()
         time.sleep(2.5)
         Coin1 = EteriumMonitor()
@@ -223,7 +351,6 @@ def home():
         Coin8 = M7v2Monitor()
         time.sleep(2.5)
 
-        print("here2")
 
         Coin.type = typeTrim(Coin.type)
         Coin1.type = typeTrim(Coin1.type)
@@ -234,12 +361,19 @@ def home():
         Coin6.type = "BitBook"
         Coin7.type = "The Sandbox"
         Coin8.type = "M7v2"
+        sand = Coin7.price
+        book = Coin6.price
+        mv = Coin8.price
+        bitcoin = Coin.price
+        etherium = Coin1.price
+        dodge = Coin2.price
+        Tether = Coin3.price
+        cat = Coin4.price
+        cel = Coin5.price
 
 
 
 
-
-        print("here3")
 
 
         coinList.append(Coin)
@@ -263,87 +397,90 @@ def home():
     else:
         return render_template('login.html', msg='')
 
-
-def bitcoinMonitor():
+def priceBitcoin():
     w = Webscrape()
     price = w.priceBitcoin()
-    type = w.typeBitcoin()
-    trendIndicator = w.trendIndicatorBitcoin()
-    trendNumber = w.trendNumberBitcoin()
-    image = w.sourceBitcoin()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def EteriumMonitor():
+    return price
+def priceEthe():
     w = Webscrape()
     price = w.priceEterium()
-    type = w.typeEterium()
-    trendIndicator = w.trendIndicatorEterium()
-    trendNumber = w.trendNumberEterium()
-    image = w.sourceEterium()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def DodgecoinMonitor():
-    w = Webscrape()
-    price = w.priceDodgecoin()
-    type = w.typeDodgecoin()
-    trendIndicator = w.trendIndicatorDodgecoin()
-    trendNumber = w.trendNumberDodgecoin()
-    image = w.sourceDodgecoin()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def TetherMonitor():
-    w = Webscrape()
-    price = w.priceTether()
-    type = w.typeTether()
-    trendIndicator = w.trendIndicatorTether()
-    trendNumber = w.trendNumberTether()
-    image = w.sourceTether()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def CatGirlMonitor():
+    return price
+def priceCat():
     w = Webscrape()
     price = w.priceCatGirl()
-    type = w.typeCatGirl()
-    trendIndicator = w.trendIndicatorCatGirl()
-    trendNumber = w.trendNumberCatGirl()
-    image = w.sourceCatGirl()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def CelsiusMonitor():
+    return price
+def priceCel():
     w = Webscrape()
     price = w.priceCelsius()
-    type = w.typeCelsius()
-    trendIndicator = w.trendIndicatorCelsius()
-    trendNumber = w.trendNumberCelsius()
-    image = w.sourceCelsius()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def BitbookMonitor():
-    w = Webscrape()
-    price = w.priceBitbook()
-    type = w.typeBitbook()
-    trendIndicator = w.trendIndicatorBitbook()
-    trendNumber = w.trendNumberBitbook()
-    image = w.sourceBitbook()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def SandboxMonitor():
-    w = Webscrape()
-    price = w.priceSandbox()
-    type = w.typeSandbox()
-    trendIndicator = w.trendIndicatorSandbox()
-    trendNumber = w.trendNumberSandbox()
-    image = w.sourceSandbox()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
-    return coin
-def M7v2Monitor():
+    return price
+def priceMv():
     w = Webscrape()
     price = w.priceM7v2()
-    type = w.typeM7v2()
-    trendIndicator = w.trendIndicatorM7v2()
-    trendNumber = w.trendNumberM7v2()
-    image = w.sourceM7v2()
-    coin = CoinDTO(price, type, trendIndicator, trendNumber, image)
+    return price
+def priceThe():
+    w = Webscrape()
+    price = w.priceTether()
+    return price
+def priceSand():
+    w = Webscrape()
+    price = w.priceSandbox()
+    return price
+def priceBook():
+    w = Webscrape()
+    price = w.priceBitbook()
+    return price
+
+def priceDodge():
+    w = Webscrape(0,"none","none",0,"none")
+    price = w.priceDodgecoin()
+    return price
+def bitcoinMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackBitcoin()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    print("here")
+    return coin
+def EteriumMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackEthereum()
+    print("here2")
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def DodgecoinMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackDodgecoin()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def TetherMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackTether()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def CatGirlMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackCatGirl()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def CelsiusMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackCelsius()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def BitbookMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackBitbook()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def SandboxMonitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackSandbox()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    return coin
+def M7v2Monitor():
+    w = Webscrape(0,"none","none",0,"none")
+    x = w.priceTrackM7v2()
+    coin = CoinDTO(x.price, x.type, x.trendIndicator, x.trendNum, x.source)
+    print("final")
     return coin
 
 def typeTrim(type):

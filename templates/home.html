@@ -1043,7 +1043,12 @@ body {
 
 <td><img src="{{coinList[i].image}}" > {{coinList[i].type}}</td>
 <td>{{coinList[i].price}}</td>
-<td>{{coinList[i].trendNumber}}</td>
+    {% if coinList[i].trendIndicator|length == 0 %}
+        <td> <p style="color:#FF0000";>{{coinList[i].trendNumber}}</p></td>
+    {% endif %}
+        {% if coinList[i].trendIndicator|length > 0 %}
+        <td> <p style="color:#00FF00";>{{coinList[i].trendNumber}}</p></td>
+    {% endif %}
     {%endfor%}
 
 </tr>
